@@ -7,47 +7,47 @@ import "vendor:raylib"
 width  :: 1280
 height :: 720
 
-vec2 :: proc(x: f32, y: f32) -> [2] f32 {
-    return [2]f32{x, y}
-}
-
 main :: proc() {
-    raylib.InitWindow(width, height, "hello world")
-    center := vec2(width / 2, height / 2);
+    init_window({width, height}, "hello world")
+    center := Vec2{width / 2, height / 2}
+    custom_font := load_font("RobotoMono-SemiBold.ttf", 50)
+    // custom_font := raylib.LoadFont("RobotoMono-SemiBold.ttf")
+
 
     rotate: f32 = 0.0
 
-    raylib.SetTargetFPS(60)
+    set_target_fps(60)
 
-    camera := raylib.Camera2D{
+    camera := Camera_2d{
         offset   = center,   
-	    target   = vec2(0.0, 0.0),         
+	    target   = {0.0, 0.0},         
 	    rotation = 0.0,             
 	    zoom     = 1.0,             
     }
 
     
-    for !raylib.WindowShouldClose() {
-        
+    for !window_should_close() {
         delta  := raylib.GetFrameTime()
         
         rotate += delta
         
-        a := 300 * vec2(math.cos(rotate - math.TAU / 3 * 0), math.sin(rotate - math.TAU / 3 * 0));
-        b := 300 * vec2(math.cos(rotate - math.TAU / 3 * 1), math.sin(rotate - math.TAU / 3 * 1));
-        c := 300 * vec2(math.cos(rotate - math.TAU / 3 * 2), math.sin(rotate - math.TAU / 3 * 2));
+        a := 300 * Vec2{math.cos(rotate - math.TAU / 3 * 0), math.sin(rotate - math.TAU / 3 * 0)};
+        b := 300 * Vec2{math.cos(rotate - math.TAU / 3 * 1), math.sin(rotate - math.TAU / 3 * 1)};
+        c := 300 * Vec2{math.cos(rotate - math.TAU / 3 * 2), math.sin(rotate - math.TAU / 3 * 2)};
         
-        raylib.BeginDrawing()
+        drawing_begin()
         raylib.ClearBackground(raylib.DARKGRAY)
         raylib.BeginMode2D(camera)
 
+        size := raylib.MeasureTextEx(custom_font, "hello world", f32(custom_font.baseSize), 0)
+
         raylib.DrawTriangleGradient(a, b, c, raylib.BLUE, raylib.RED, raylib.GREEN)
-        raylib.DrawText("hello world", -310, -60, 120, raylib.WHITE)
+        raylib.DrawTextPro(custom_font, "hello world", {0, 0}, size / 2, 0, 50, 0, raylib.WHITE)
         
-        raylib.EndMode2D()
-        raylib.EndDrawing()
-        
+        mode_end()
+        drawing_end()
     }
 
+    raylib.UnloadFont(custom_font);
     raylib.CloseWindow()
 }
