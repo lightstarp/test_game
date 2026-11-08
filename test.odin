@@ -11,8 +11,6 @@ vec2 :: proc(x: f32, y: f32) -> [2] f32 {
     return [2]f32{x, y}
 }
 
-// DrawTriangleGradient :: proc(v1, v2, v3: Vector2, c1, c2, c3: Color) ---
-
 main :: proc() {
     raylib.InitWindow(width, height, "hello world")
     center := vec2(width / 2, height / 2);
