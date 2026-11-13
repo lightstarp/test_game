@@ -9,7 +9,9 @@
 package main
 
 import "vendor:raylib"
+import "core:fmt"
 import "core:math"
+import "core:math/bits"
 import "core:strings"
 
 TAU           :: math.TAU
@@ -22,6 +24,7 @@ Color         :: raylib.Color
 Image         :: raylib.Image
 Texture_2D    :: raylib.Texture2D
 Keyboard_Key  :: raylib.KeyboardKey
+Mouse_Button  :: raylib.MouseButton
 
 
 
@@ -121,6 +124,7 @@ window_should_close :: proc() -> bool { return raylib.WindowShouldClose() }
 set_target_fps      :: proc(fps: i32) { raylib.SetTargetFPS(fps) }
 
 is_key_press   :: proc(key: Keyboard_Key) -> bool { return raylib.IsKeyDown(key) }
+is_mouse_button_press :: proc(mouse: Mouse_Button) -> bool { return raylib.IsMouseButtonDown(mouse) }
 is_key_pressed :: proc(key: Keyboard_Key) -> bool { return raylib.IsKeyPressed(key) }
 get_mouse_screen_pos :: proc() -> Int2 { return {raylib.GetMouseX(), raylib.GetMouseY()} }
 
@@ -177,7 +181,16 @@ screen_draw_quad_gradient :: proc(p0: Vec2, p1: Vec2, p2: Vec2, p3: Vec2, c0: Co
 
 screen_draw_quad :: proc{screen_draw_quad_simple, screen_draw_quad_gradient}
 
+rand :: proc() -> f32 {
+    x := raylib.GetRandomValue(0, 1 << 16 - 1)
+    f := f64(u32(x))
+    // fmt.printfln("%6.2f", f)
+    return f32(f / f64(1 << 16 - 1))
+}
 
+lerp :: proc(x: f32, min: f32, max: f32) -> f32 {
+    return (x + min) * (max - min)
+}
 
 mode_begin :: proc(camera: Camera_2D) { raylib.BeginMode2D(camera) }
 mode_end   :: proc() { raylib.EndMode2D() }
